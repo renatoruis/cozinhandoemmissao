@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozinhando em Missão — Fernanda Lopes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Poppins', 'sans-serif'] },
+          colors: {
+            orange: '#F4A261',
+            'orange-strong': '#E76F51',
+            purple: '#7e65cb',
+            'purple-hover': '#6b55b0',
+            lilac: '#B8B5FF',
+            beige: '#F1EDE6',
+            gray: '#4A4A4A',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12); border-color: rgba(126, 101, 203, 0.15); }
+    .btn-primary { transition: background 0.2s ease, transform 0.2s ease; }
+    .btn-primary:hover { background: #6b55b0; transform: translateY(-1px); }
+    .fade-in { opacity: 0; transform: translateY(12px); animation: fadeIn 0.6s ease forwards; }
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+    .nav-link { scroll-margin-top: 4rem; }
+    .modal-backdrop { opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+    .modal-backdrop.active { opacity: 1; visibility: visible; }
+    .modal-content { transform: scale(0.95); transition: transform 0.3s; }
+    .modal-backdrop.active .modal-content { transform: scale(1); }
+    .btn-hero-float {
+      animation: float 3s ease-in-out infinite;
+      box-shadow: 0 20px 50px rgba(244, 162, 97, 0.45);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .carrossel-gradiente-esq {
+      background: linear-gradient(to right, #FFFFFF 0%, transparent 100%);
+      pointer-events: none;
+    }
+    #lista-mensagens::-webkit-scrollbar { height: 6px; }
+    #lista-mensagens::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
+    #lista-mensagens::-webkit-scrollbar-thumb { background: rgba(126, 101, 203, 0.3); border-radius: 3px; }
+    .carrossel-gradiente-dir {
+      background: linear-gradient(to left, #FFFFFF 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .section-title {
+      position: relative;
+      overflow: hidden;
+    }
+    .section-title-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 15vw, 12rem);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(74, 74, 74, 0.06);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .section-title-bg.left { left: 0; transform: translate(0, -50%); }
+    .section-title-front {
+      position: relative;
+      z-index: 1;
+      font-weight: 300;
+    }
+    .polaroid-hero {
+      background: #fff;
+      padding: 12px 12px 48px 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 10px 25px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.1);
+      transform: rotate(-4deg);
+      max-width: 100%;
+    }
+    .polaroid-inner {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #f8f8f8;
+    }
+    .polaroid-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  </style>
+</head>
+<body class="font-sans text-gray antialiased bg-white">
+  <!-- Logo superior -->
+  <header class="bg-white border-b border-gray/10 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex justify-center">
+      <a href="#" class="flex items-center"><img src="assets/logo.png" alt="Cozinhando em Missão" class="h-14 sm:h-20 w-auto object-contain"></a>
+    </div>
+  </header>
+
+  <!-- 1. Hero Section -->
+  <section id="hero" class="nav-link min-h-screen pt-12 pb-16 px-4 sm:px-6 flex items-center bg-beige">
+    <div class="max-w-6xl mx-auto w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div class="space-y-8">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray leading-tight">
+            Gastronomia como<span class="text-purple"> ferramenta de missão</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-gray/90 leading-relaxed">
+            A cozinha como adoração. A mesa como comunhão. O alimento como linguagem de amor, dignidade e evangelho.
+          </p>
+          <div>
+            <button type="button" onclick="abrirModalContribuir()" class="btn-hero-float inline-flex justify-center items-center px-12 py-6 rounded-2xl bg-orange text-white font-bold text-xl sm:text-2xl hover:bg-orange-strong transition-colors hover:scale-105">
+              Quero sustentar essa missão
+            </button>
+          </div>
+        </div>
+        <div class="polaroid-hero">
+          <div class="polaroid-inner">
+            <img src="assets/hero-1.webp" alt="Fernanda Lopes" class="polaroid-img">
+          </div>
+        </div>
+      </div>
+    </div>  
+  </section>
+
+  <!-- 2. Sobre a Missão -->
+  <section id="sobre" class="nav-link py-20 sm:py-28 px-4 sm:px-6 bg-white">
+    <div class="max-w-4xl mx-auto">
+      <div class="section-title mb-8 py-8 text-center">
+        <span class="section-title-bg">Sobre a missão</span>
+        <h2 class="section-title-front text-3xl sm:text-4xl text-gray">Sobre a missão</h2>
+      </div>
+      <div class="space-y-6 text-lg text-gray/90 leading-relaxed">
+        <p>
+          Meu nome é <strong class="text-gray">Fernanda Lopes</strong>. Tenho 37 anos, sou missionária em tempo integral na <a href="https://avalanchemissoes.org/" target="_blank" rel="noopener" class="text-purple font-semibold hover:text-purple-hover transition-colors underline">Missão Avalanche</a>, em Vitória/ES, onde sirvo desde janeiro de 2021. Congrego na Igreja Ser Amor, em Vila Velha.
+        </p>
+        <p>
+          Há mais de 5 anos, dedico minha vida integralmente ao chamado de Deus, servindo através da gastronomia como ferramenta de missão, discipulado, cuidado e restauração.
+        </p>
+        <p>
+          Sou cozinheira formada pelo SENAC Campos do Jordão, técnica em Gastronomia e Panificação pelo IFSC, com mais de 12 anos de experiência. Estou concluindo o curso superior em Gastronomia pela UNICESUMAR.
+        </p>
+        <div class="my-12 p-8 rounded-2xl bg-lilac/30 border-l-4 border-purple">
+          <p class="text-xl sm:text-2xl font-semibold text-gray italic leading-relaxed">
+            "Desde 2019, compreendi em Deus que minha profissão não é apenas um meio de sustento, mas um instrumento missionário de transformação de vidas. A cozinha se tornou uma forma de adoração a Deus, a mesa meu espaço de comunhão, e o alimento uma linguagem de amor, dignidade e evangelho."
+          </p>
+        </div>
+        <p>
+          Este projeto tem como objetivo apresentar minha atuação missionária e levantar recursos financeiros para que eu possa continuar servindo com excelência, constância e disponibilidade total para aquilo que Deus me confiou.
+        </p>
+        <p class="pt-4">
+          <a href="assets/cozinhando-em-missao.pdf" download class="text-purple font-medium hover:text-purple-hover transition-colors border-b-2 border-purple pb-1">Baixar projeto completo (PDF)</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Áreas de Atuação -->
+  <section id="atuacao" class="nav-link py-20 sm:py-28 px-4 sm:px-6 bg-beige/50">
+    <div class="max-w-5xl mx-auto">
+      <div class="section-title mb-2 py-8">
+        <span class="section-title-bg left">Áreas de atuação</span>
+        <h2 class="section-title-front text-2xl sm:text-3xl text-gray">Áreas de atuação</h2>
+      </div>
+      <p class="text-gray/70 mb-12 max-w-xl">
+        Onde a cozinha e a missão se encontram no dia a dia.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div class="card-hover p-8 sm:p-10 rounded-2xl bg-white shadow-xl border border-gray/5">
+          <span class="block w-10 h-0.5 bg-purple mb-6"></span>
+          <h3 class="text-xl font-semibold text-gray mb-4">Escola Fé e Alimento</h3>
+          <p class="text-gray/80 leading-relaxed">
+            Escola noturna: teologia, espiritualidade e gastronomia no mesmo lugar. A gente ensina que cozinhar e servir também é oração.
+          </p>
+        </div>
+        <div class="card-hover p-8 sm:p-10 rounded-2xl bg-white shadow-xl border border-gray/5">
+          <span class="block w-10 h-0.5 bg-orange mb-6"></span>
+          <h3 class="text-xl font-semibold text-gray mb-4">Do Pouco ao Muito</h3>
+          <p class="text-gray/80 leading-relaxed">
+            Focado em mulheres em situação de vulnerabilidade. Oficinas de cozinha e panificação, geração de renda e acompanhamento espiritual.
+          </p>
+        </div>
+        <div class="card-hover p-8 sm:p-10 rounded-2xl bg-white shadow-xl border border-gray/5">
+          <span class="block w-10 h-0.5 bg-purple mb-6"></span>
+          <h3 class="text-xl font-semibold text-gray mb-4">Oficinas para mulheres</h3>
+          <p class="text-gray/80 leading-relaxed">
+            Em parceria com igrejas: alimentação saudável, cozinha como espaço de cuidado e a família à mesa.
+          </p>
+        </div>
+        <div class="card-hover p-8 sm:p-10 rounded-2xl bg-white shadow-xl border border-gray/5">
+          <span class="block w-10 h-0.5 bg-orange mb-6"></span>
+          <h3 class="text-xl font-semibold text-gray mb-4"><a href="https://avalanchemissoes.org/" target="_blank" rel="noopener" class="text-gray hover:text-purple transition-colors">Missão Avalanche</a></h3>
+          <p class="text-gray/80 leading-relaxed">
+            Evangelismos, cozinha em eventos e escolas, Projeto Ninho com migrantes e refugiados, Dias da Família.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Galeria em mosaico -->
+  <section class="py-12 sm:py-16 bg-white overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 mb-6">
+      <div class="section-title py-6 text-center">
+        <span class="section-title-bg">Nossa missão em fotos</span>
+        <h2 class="section-title-front text-2xl sm:text-3xl text-gray">Nossa missão em fotos</h2>
+      </div>
+    </div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div id="galeria-mosaico" class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+        <!-- Preenchido via JS a partir de assets/galeria-data.js -->
+      </div>
+      <div id="galeria-more-wrapper" class="text-center mt-6 hidden">
+        <button type="button" id="galeria-mostrar-mais" class="px-8 py-3 rounded-xl bg-purple text-white font-semibold hover:bg-purple-hover transition-colors">
+          Mostrar mais fotos
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal lightbox da galeria -->
+  <div id="modal-galeria" class="modal-backdrop fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90" onclick="fecharModalGaleria(event)">
+    <div class="relative w-full max-w-4xl max-h-[90vh] flex items-center justify-center" onclick="event.stopPropagation()">
+      <button type="button" onclick="fecharModalGaleria()" class="absolute -top-12 right-0 text-white/80 hover:text-white text-4xl leading-none z-20" aria-label="Fechar">×</button>
+      <button type="button" id="galeria-prev" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white text-2xl z-20 transition-colors" aria-label="Anterior">‹</button>
+      <img id="galeria-img" src="" alt="" class="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg">
+      <button type="button" id="galeria-next" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white text-2xl z-20 transition-colors" aria-label="Próximo">›</button>
+      <span id="galeria-contador" class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-white/70 text-sm"></span>
+    </div>
+  </div>
+
+  <!-- 4. Impacto / Por que apoiar -->
+  <section class="py-20 sm:py-28 px-4 sm:px-6 bg-beige/30">
+    <div class="max-w-2xl mx-auto">
+      <div class="section-title mb-10 py-8">
+        <span class="section-title-bg left">O que sua contribuição sustenta</span>
+        <h2 class="section-title-front text-2xl sm:text-3xl text-gray">O que sua contribuição sustenta</h2>
+      </div>
+      <div class="space-y-8 text-gray/90 leading-relaxed">
+        <p>
+          Quando você contribui, não é só um valor que vai para uma conta. É o combustível para a cozinha da Escola Fé e Alimento funcionar, para as oficinas do Do Pouco ao Muito seguirem acontecendo, para eu estar presente nos evangelismos e nas mesas que a missão põe à mesa.
+        </p>
+        <p>
+          Tem mulher que descobre que pode ganhar o próprio dinheiro fazendo pão. Tem família que senta junto de novo à mesa. Tem pessoa que ouve do evangelho num prato de comida quente. Tudo isso só existe porque alguém decidiu parar e investir.
+        </p>
+      </div>
+      <div class="mt-12">
+        <button type="button" onclick="abrirModalContribuir()" class="text-purple font-medium hover:text-purple-hover transition-colors border-b-2 border-purple pb-1">
+          Quero contribuir
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Seção principal de contribuição (MAIOR DESTAQUE) -->
+  <section id="contribuir" class="nav-link py-20 sm:py-28 px-4 sm:px-6 bg-orange">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="section-title mb-6 py-8">
+        <span class="section-title-bg" style="color: rgba(255,255,255,0.12);">Seja um missionário sustentando essa obra</span>
+        <h2 class="section-title-front text-4xl sm:text-5xl lg:text-6xl text-white leading-tight font-light">
+          Seja um missionário sustentando essa obra
+        </h2>
+      </div>
+      <p class="text-xl text-white/95 mb-10 leading-relaxed">
+        Vivemos em missão integral. Cada contribuição financia sustento pessoal, formação contínua e materiais para oficinas e aulas. Sua parceria faz a diferença.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button type="button" onclick="abrirModalContribuir()" class="inline-flex justify-center items-center px-12 py-5 rounded-2xl bg-purple text-white font-bold text-lg btn-primary shadow-xl">
+          Quero contribuir agora
+        </button>
+        <!-- TODO: ativar seção mensagens
+        <button type="button" onclick="abrirModalMensagem()" class="inline-flex justify-center items-center px-12 py-5 rounded-2xl border-2 border-white text-white font-bold text-lg hover:bg-white hover:text-orange transition-colors">
+          Enviar mensagem de apoio
+        </button>
+        -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Seção de mensagens públicas - DESATIVADA (ativar no futuro) -->
+  <!--
+  <section id="mensagens" class="nav-link py-20 sm:py-28 px-4 sm:px-6 bg-beige/30">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl sm:text-4xl font-bold text-gray mb-4 text-center">
+        Mensagens de apoio
+      </h2>
+      <p class="text-lg text-gray/80 text-center mb-12">
+        Deixe uma mensagem de encorajamento para a missão
+      </p>
+      <div class="text-center mb-12">
+        <button type="button" onclick="abrirModalMensagem()" class="inline-flex justify-center items-center px-8 py-4 rounded-2xl bg-purple text-white font-semibold hover:bg-purple-hover transition-colors">
+          Escrever mensagem
+        </button>
+      </div>
+      <div class="relative">
+        <div class="relative">
+          <div id="lista-mensagens" class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth" style="scrollbar-width: thin;"></div>
+          <button type="button" id="msg-prev" class="msg-arrow absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/95 shadow-md hidden items-center justify-center text-gray hover:bg-white transition-colors z-20 text-xl disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Anterior">‹</button>
+          <button type="button" id="msg-next" class="msg-arrow absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/95 shadow-md hidden items-center justify-center text-gray hover:bg-white transition-colors z-20 text-xl disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Próximo">›</button>
+        </div>
+        <div id="paginacao-mensagens" class="flex items-center justify-center gap-4 mt-6 flex-wrap"></div>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <!-- 7. Convite final -->
+  <section class="py-20 sm:py-28 px-4 sm:px-6 bg-lilac">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="section-title mb-6 py-8">
+        <span class="section-title-bg" style="color: rgba(74, 74, 74, 0.08);">Caminhe conosco nessa missão</span>
+        <h2 class="section-title-front text-3xl sm:text-4xl text-gray">
+          Caminhe conosco nessa missão
+        </h2>
+      </div>
+      <p class="text-lg text-gray/90 mb-10 leading-relaxed">
+        Convido você a participar através de oração, divulgação deste projeto ou contribuição financeira mensal ou pontual. Juntos, podemos continuar levando fé, alimento e esperança a muitos lugares.
+      </p>
+      <p class="text-gray/80 mb-8">
+        Te convido a orar e verificar com Deus sobre se tornar um parceiro na missão dele através da minha vida.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
+        <a href="https://wa.me/5548996387745" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-3 px-12 py-5 rounded-2xl bg-purple text-white font-bold text-lg hover:bg-purple-hover transition-colors shadow-lg">
+          Falar pelo WhatsApp
+        </a>
+        <a id="share-whatsapp" href="#" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-3 px-12 py-5 rounded-2xl bg-[#25D366] text-white font-bold text-lg hover:bg-[#20bd5a] transition-colors shadow-lg">
+          Compartilhar no WhatsApp
+        </a>
+      </div>
+      <p class="text-gray/70 text-sm mt-6 mb-8">
+        Quer conhecer o projeto em detalhes?
+      </p>
+      <a href="assets/cozinhando-em-missao.pdf" download class="inline-flex justify-center items-center gap-2 px-10 py-4 rounded-2xl border-2 border-purple text-purple font-bold hover:bg-purple hover:text-white transition-colors">
+        Baixar projeto completo (PDF)
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 sm:px-6 bg-white border-t border-gray/10">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div class="flex flex-col items-center sm:items-start">
+          <a href="index.html"><img src="assets/logo.png" alt="Cozinhando em Missão" class="h-14 sm:h-16 w-auto object-contain mb-2"></a>
+          <p class="text-gray/70 text-sm">Fernanda Lopes — <a href="https://avalanchemissoes.org/" target="_blank" rel="noopener" class="text-purple hover:text-purple-hover transition-colors">Missão Avalanche</a></p>
+        </div>
+        <div class="text-center sm:text-right flex flex-col gap-2">
+          <p class="text-gray/80 font-medium mb-1">Contato</p>
+          <a href="https://wa.me/5548996387745" target="_blank" rel="noopener" class="text-purple font-semibold hover:text-purple-hover transition-colors">(48) 9 9638-7745</a>
+          <a href="https://www.instagram.com/nandinhalop" target="_blank" rel="noopener" class="text-purple font-semibold hover:text-purple-hover transition-colors">Instagram</a>
+          <a href="assets/cozinhando-em-missao.pdf" download class="text-purple font-semibold hover:text-purple-hover transition-colors">Projeto em PDF</a>
+        </div>
+      </div>
+      <p class="text-center text-gray/50 text-sm mt-8">© Cozinhando em Missão. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Modal Contribuir -->
+  <div id="modal-contribuir" class="modal-backdrop fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50" onclick="fecharModalContribuir(event)">
+    <div class="modal-content w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <div class="p-6 sm:p-8">
+        <div class="flex justify-between items-start mb-6">
+          <h3 class="text-2xl font-bold text-gray">Como deseja contribuir?</h3>
+          <button type="button" onclick="fecharModalContribuir()" class="text-gray/60 hover:text-gray text-2xl leading-none">×</button>
+        </div>
+        <div class="space-y-4">
+          <button type="button" onclick="mostrarDadosPix()" class="w-full p-4 rounded-xl border-2 border-purple/30 bg-purple/5 hover:bg-purple/10 hover:border-purple/50 transition-colors text-left flex items-center gap-4">
+            <span class="text-3xl">📱</span>
+            <div>
+              <p class="font-semibold text-gray">PIX</p>
+              <p class="text-sm text-gray/70">Ver chave PIX e QR Code</p>
+            </div>
+          </button>
+          <a href="https://wa.me/5548996387745" target="_blank" rel="noopener" class="flex w-full p-4 rounded-xl border-2 border-green-500/30 bg-green-50 hover:bg-green-100 hover:border-green-500/50 transition-colors text-left items-center gap-4">
+            <span class="text-3xl">💬</span>
+            <div>
+              <p class="font-semibold text-gray">Falar no WhatsApp</p>
+              <p class="text-sm text-gray/70">Alinhar contribuição por mensagem</p>
+            </div>
+          </a>
+        </div>
+        <div id="dados-pix" class="mt-6 p-6 rounded-xl bg-beige border border-gray/10 hidden">
+          <h4 class="font-semibold text-gray mb-4">Dados para contribuição</h4>
+          <div class="flex flex-col sm:flex-row gap-6 items-start">
+            <div class="flex-shrink-0">
+              <img src="assets/qrcode-pix.png" alt="QR Code PIX" class="w-40 h-40 rounded-xl border border-gray/20 bg-white">
+              <p class="text-xs text-gray/50 mt-2 text-center">Escaneie com o app do banco</p>
+            </div>
+            <div class="space-y-3 text-sm flex-1 min-w-0">
+              <div>
+                <p class="text-gray/60 mb-1">Chave PIX (telefone):</p>
+                <p class="font-mono text-gray break-all" id="chave-pix">48 99638-7745</p>
+                <button type="button" onclick="copiarPix()" class="mt-1 text-purple font-medium hover:underline">Copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modais de mensagens - DESATIVADOS (ativar junto com seção mensagens)
+  <div id="modal-mensagem-completa" class="modal-backdrop fixed inset-0 z-[101] flex items-center justify-center p-4 bg-black/50" onclick="fecharModalMensagemCompleta(event)">
+    <div class="modal-content w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="p-6 sm:p-8">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-lg font-semibold text-gray">Mensagem</h3>
+          <button type="button" onclick="fecharModalMensagemCompleta()" class="text-gray/60 hover:text-gray text-2xl leading-none">×</button>
+        </div>
+        <p id="modal-mensagem-texto" class="text-gray/90 leading-relaxed whitespace-pre-wrap mb-4"></p>
+        <p id="modal-mensagem-autor" class="text-sm text-gray/60">— </p>
+      </div>
+    </div>
+  </div>
+  <div id="modal-mensagem-enviada" class="modal-backdrop fixed inset-0 z-[101] flex items-center justify-center p-4 bg-black/50" onclick="fecharModalMensagemEnviada(event)">
+    <div class="modal-content w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <div class="p-8 text-center">
+        <div class="w-16 h-16 rounded-full bg-purple/10 flex items-center justify-center mx-auto mb-6 text-4xl text-purple">✓</div>
+        <h3 class="text-xl font-bold text-gray mb-3">Mensagem enviada!</h3>
+        <p class="text-gray/80 mb-6">Sua mensagem foi enviada para aprovação. Ela será publicada em breve.</p>
+        <button type="button" onclick="fecharModalMensagemEnviada()" class="px-8 py-3 rounded-xl bg-purple text-white font-semibold hover:bg-purple-hover transition-colors">
+          Ok
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="modal-mensagem" class="modal-backdrop fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50" onclick="fecharModalMensagem(event)">
+    <div class="modal-content w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="p-6 sm:p-8">
+        <div class="flex justify-between items-start mb-6">
+          <h3 class="text-2xl font-bold text-gray">Mensagem de apoio</h3>
+          <button type="button" onclick="fecharModalMensagem()" class="text-gray/60 hover:text-gray text-2xl leading-none">×</button>
+        </div>
+        <form id="form-mensagem" class="space-y-4">
+          <div>
+            <label for="nome" class="block text-sm font-medium text-gray mb-2">Nome *</label>
+            <input type="text" id="nome" name="nome" required class="w-full px-4 py-3 rounded-xl border-2 border-gray/20 focus:border-purple focus:outline-none focus:ring-2 focus:ring-purple/20" placeholder="Seu nome">
+          </div>
+          <div>
+            <label for="cidade" class="block text-sm font-medium text-gray mb-2">Cidade (opcional)</label>
+            <input type="text" id="cidade" name="cidade" class="w-full px-4 py-3 rounded-xl border-2 border-gray/20 focus:border-purple focus:outline-none focus:ring-2 focus:ring-purple/20" placeholder="Ex: Vitória, ES">
+          </div>
+          <div>
+            <label for="mensagem" class="block text-sm font-medium text-gray mb-2">Mensagem *</label>
+            <textarea id="mensagem" name="mensagem" rows="4" required class="w-full px-4 py-3 rounded-xl border-2 border-gray/20 focus:border-purple focus:outline-none focus:ring-2 focus:ring-purple/20 resize-none" placeholder="Escreva sua mensagem de apoio..."></textarea>
+          </div>
+          <button type="submit" class="w-full py-4 rounded-xl bg-purple text-white font-semibold hover:bg-purple-hover transition-colors">
+            Enviar mensagem
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <script src="assets/galeria-data.js"></script>
+  <script src="core.js"></script>
+</body>
+</html>
