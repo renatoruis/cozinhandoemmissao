@@ -349,8 +349,24 @@ setupMsgArrows();
 buscarMensagens(1);
 }
 
-// Compartilhar no WhatsApp
+// WhatsApp
+const WHATSAPP_NUMBER = '5548996387745';
 const SHARE_SITE_URL = 'https://cozinhandoemmissao.com.br';
+
+const msgFalarWhatsApp = `Olá, Fernanda! 👋
+
+Acessei o site *Cozinhando em Missão* e gostaria de saber mais sobre como posso apoiar essa obra.
+
+Seja através de oração, divulgação ou contribuição financeira — quero fazer parte!
+
+Aguardo seu retorno.`;
+
+// Preencher mensagem nos links "Falar pelo WhatsApp" (exceto share)
+document.querySelectorAll('a[href*="wa.me/' + WHATSAPP_NUMBER + '"]').forEach(link => {
+  if (!link.href.includes('?text=')) {
+    link.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msgFalarWhatsApp);
+  }
+});
 
 const shareTextoWhatsApp = `*🍳 Cozinhando em Missão*
 
